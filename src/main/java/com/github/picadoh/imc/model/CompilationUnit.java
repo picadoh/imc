@@ -8,8 +8,8 @@ import com.google.common.base.Objects;
  * package.
  */
 public class CompilationUnit {
-	private String name;
-	private JavaMemoryObject memoryObject;
+	private final String name;
+	private final JavaMemoryObject memoryObject;
 
 	/**
 	 * Constructs a compilation unit given a name and a byte array java file

@@ -15,12 +15,6 @@ public class JavaSourceFromString extends SimpleJavaFileObject {
 	private final String code;
 	private final String className;
 
-	public JavaSourceFromString(String className) {
-		super(URI.create("mem:///" + className.replace('.', '/') + Kind.CLASS.extension), Kind.CLASS);
-		this.className = className;
-		this.code = null;
-	}
-
 	public JavaSourceFromString(String className, String javaSourceCode) {
 		super(URI.create("string:///" + className.replace('.', '/')
 				+ Kind.SOURCE.extension), Kind.SOURCE);

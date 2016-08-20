@@ -32,12 +32,6 @@ public class JavaSourceFromStringTest {
     }
 
     @Test
-    public void shouldGetClassKind() {
-        victim = new JavaSourceFromString(HW_NAME);
-        assertEquals(victim.getKind(), JavaFileObject.Kind.CLASS);
-    }
-
-    @Test
     public void shouldGetSourceKind() {
         victim = new JavaSourceFromString(HW_NAME, HW_CODE);
         assertEquals(victim.getKind(), JavaFileObject.Kind.SOURCE);
@@ -49,9 +43,4 @@ public class JavaSourceFromStringTest {
         assertEquals(victim.toUri().toString(), "string:///HelloWorld.java");
     }
 
-    @Test
-    public void shouldGetClassURL() {
-        victim = new JavaSourceFromString(HW_NAME);
-        assertEquals(victim.toUri().toString(), "mem:///HelloWorld.class");
-    }
 }
