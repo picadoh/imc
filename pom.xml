@@ -4,7 +4,7 @@
 
     <groupId>com.github.picadoh</groupId>
     <artifactId>imc</artifactId>
-    <version>0.2</version>
+    <version>0.3-SNAPSHOT</version>
 
     <properties>
         <java.version>1.7</java.version>
@@ -49,7 +49,7 @@
         <url>https://github.com/picadoh/imc</url>
         <connection>scm:git:git://github.com/picadoh/imc.git</connection>
         <developerConnection>scm:git:git@github.com:picadoh/imc.git</developerConnection>
-      <tag>imc-0.2</tag>
+      <tag>HEAD</tag>
   </scm>
 
     <build>
