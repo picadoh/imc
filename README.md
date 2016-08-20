@@ -16,10 +16,10 @@ The in-memory compiler allows you to compile java source to in-memory bytecode.
 
     // **** LOAD
     CompilationPackageLoader loader = new CompilationPackageLoader();
-    List<Class<?>> classes = loader.load(pkg);
+    Map<String, Class<?>> classes = loader.loadAsMap(pkg);
 
     // **** EXECUTE (using reflection)
-    classes.get(0).getMethod("main", String[].class).invoke(null, (Object) null);
+    classes.get("HelloWorld").getMethod("main", String[].class).invoke(null, (Object) null);
 
 #### Using a known interface
 
@@ -35,7 +35,7 @@ If the subject source code implements a known interface to the application execu
 
     String source =
         "import java.util.Collections;\n"+
-        "public class StringSorterByText {\n"+
+        "public class StringSorterByText implements StringSorter {\n"+
             "@Override\n"+
             "public void sort(List<Strings> strings) {\n"+
                 "Collections.sort(strings);\n"+
@@ -50,8 +50,8 @@ If the subject source code implements a known interface to the application execu
 
     // **** LOAD
     CompilationPackageLoader loader = new CompilationPackageLoader();
-    List<Class<?>> classes = loader.load(pkg);
+    Map<String, Class<?>> classes = loader.loadAsMap(pkg);
 
     // **** EXECUTE
-    StringSorter sorter = classes.get(0).newInstance();
+    StringSorter sorter = (StringSorter)classes.get("StringSorterByText").newInstance();
     sorter.sort(newArrayList("c","a","b"));
