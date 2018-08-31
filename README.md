@@ -61,10 +61,10 @@ If the subject source code implements a known interface to the application execu
 	System.out.println(notSorted);
     
 #### Taking care of packages
+ 
+Your class hierarchy will probably be in a package hierarchy, say `mycompany.myartifact.mycomponent`, then the previous example must be edited to look like this:
     
-    Your class hierarchy will probably be in a package hierarchy, say `mycompany.myartifact.mycomponent`, then the previous example must be edited to look like this:
-    
-** Interface **
+**Interface**
 
     package mycompany.myartifact.mycomponent;
     
