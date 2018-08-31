@@ -35,9 +35,10 @@ If the subject source code implements a known interface to the application execu
 
     String source =
         "import java.util.Collections;\n"+
+        "import java.util.List;\n"+
         "public class StringSorterByText implements StringSorter {\n"+
             "@Override\n"+
-            "public void sort(List<Strings> strings) {\n"+
+            "public void sort(List<String> strings) {\n"+
                 "Collections.sort(strings);\n"+
             "}\n"+
         "}";
@@ -54,4 +55,49 @@ If the subject source code implements a known interface to the application execu
 
     // **** EXECUTE
     StringSorter sorter = (StringSorter)classes.get("StringSorterByText").newInstance();
-    sorter.sort(newArrayList("c","a","b"));
+    List<String> notSorted = Arrays.asList("b", "c", "a");
+    System.out.println(notSorted);
+	sorter.sort(notSorted);
+	System.out.println(notSorted);
+    
+#### Taking care of packages
+    
+    Your class hierarchy will probably be in a package hierarchy, say `mycompany.myartifact.mycomponent`, then the previous example must be edited to look like this:
+    
+** Interface **
+
+    package mycompany.myartifact.mycomponent;
+    
+    public interface StringSorter {
+        void sort(List<String> strings);
+    }
+    
+ **Subject code**
+
+    String source =
+        "package mycompany.myartifact.mycomponent;\n"+    
+        "import java.util.Collections;\n"+
+        "import java.util.List;\n"+
+        "public class StringSorterByText implements StringSorter {\n"+
+            "@Override\n"+
+            "public void sort(List<String> strings) {\n"+
+                "Collections.sort(strings);\n"+
+            "}\n"+
+        "}";
+        
+**Usage**
+
+    // **** COMPILE
+    InMemoryCompiler compiler = new InMemoryCompiler();
+    CompilationPackage pkg = compiler.singleCompile("StringSorterByText", source);
+
+    // **** LOAD
+    CompilationPackageLoader loader = new CompilationPackageLoader();
+    Map<String, Class<?>> classes = loader.loadAsMap(pkg);
+
+    // **** EXECUTE
+    StringSorter sorter = (StringSorter)classes.get("mycompany.myartifact.mycomponent.StringSorterByText").newInstance();
+    List<String> notSorted = Arrays.asList("b", "c", "a");
+    System.out.println(notSorted);
+	sorter.sort(notSorted);
+	System.out.println(notSorted);
