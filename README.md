@@ -1,25 +1,64 @@
 ### In-Memory Java Compiler
 The in-memory compiler allows you to compile java source to in-memory bytecode.
 
+### Disclaimer
+
+This code isn't considered stable thus background compatibility isn't guaranteed.
+
+* APIs are subject to change at any time.
+* Code makes use of internal Java APIs that may change between Java versions.
+
+### API Documentation
+
+    // Compile
+    InMemoryJavaCompiler::compile(className, classSourceCode)
+        returns CompilerResult
+
+    InMemoryJavaCompiler::compile(classSourceMap)
+        returns CompilerResult
+
+    // Compilation Results
+    CompilerResult::hasErrors()
+        returns boolean
+
+    CompilerResult::getCompilationErrors()
+        returns String
+
+    CompilerResult::loadClassMap()
+        returns Map<String,Class<?>>
+        throws ClassNotFoundException
+
 #### Sample usage
 
     String source =
-        "public class HelloWorld {\n"+
+        "public class Main {\n"+
             "public static void main(String[] args) {\n"+
-                "System.out.println();\n"+
+                "System.out.println(\"hello,world!\");\n"+
             "}\n"+
         "}";
 
-    // **** COMPILE
-    InMemoryCompiler compiler = new InMemoryCompiler();
-    CompilationPackage pkg = compiler.singleCompile("HelloWorld", source);
+    // Compile
+    InMemoryJavaCompiler compiler = new InMemoryJavaCompiler();
+    CompilerResult result = compiler.compile("Main", source);
 
-    // **** LOAD
-    CompilationPackageLoader loader = new CompilationPackageLoader();
-    Map<String, Class<?>> classes = loader.loadAsMap(pkg);
+    // Load
+    Map<String, Class<?>> classes = result.loadClassMap();
 
-    // **** EXECUTE (using reflection)
+    // Execute (using Reflection)
     classes.get("HelloWorld").getMethod("main", String[].class).invoke(null, (Object) null);
+
+#### Handling Compiler Errors
+
+The `CompilerResult` may include compilation errors, if any.
+
+    InMemoryJavaCompiler compiler = new InMemoryJavaCompiler();
+    CompilerResult result = compiler.compile("Main", source);
+
+    if (result.hasErrors()) {
+        System.out.println(result.getCompilationErrors());
+    } else {
+        // ...
+    }
 
 #### Using a known interface
 
@@ -45,15 +84,14 @@ If the subject source code implements a known interface to the application execu
 
 **Usage**
 
-    // **** COMPILE
-    InMemoryCompiler compiler = new InMemoryCompiler();
-    CompilationPackage pkg = compiler.singleCompile("StringSorterByText", source);
+    // Compile
+    InMemoryJavaCompiler compiler = new InMemoryJavaCompiler();
+    CompilerResult result = compiler.compile("StringSorterByText", source);
 
-    // **** LOAD
-    CompilationPackageLoader loader = new CompilationPackageLoader();
-    Map<String, Class<?>> classes = loader.loadAsMap(pkg);
+    // Load
+    Map<String, Class<?>> classes = result.loadClassMap();
 
-    // **** EXECUTE
+    // Execute (using Interface)
     StringSorter sorter = (StringSorter)classes.get("StringSorterByText").newInstance();
     List<String> notSorted = Arrays.asList("b", "c", "a");
     System.out.println(notSorted);
@@ -72,7 +110,7 @@ Your class hierarchy will probably be in a package hierarchy, say `mycompany.mya
         void sort(List<String> strings);
     }
     
- **Subject code**
+**Subject code**
 
     String source =
         "package mycompany.myartifact.mycomponent;\n"+    
@@ -87,15 +125,14 @@ Your class hierarchy will probably be in a package hierarchy, say `mycompany.mya
         
 **Usage**
 
-    // **** COMPILE
-    InMemoryCompiler compiler = new InMemoryCompiler();
-    CompilationPackage pkg = compiler.singleCompile("StringSorterByText", source);
+    // Compile
+    InMemoryJavaCompiler compiler = new InMemoryJavaCompiler();
+    CompilerResult result = compiler.compile("StringSorterByText", source);
 
-    // **** LOAD
-    CompilationPackageLoader loader = new CompilationPackageLoader();
-    Map<String, Class<?>> classes = loader.loadAsMap(pkg);
+    // Load
+    Map<String, Class<?>> classes = result.loadClassMap();
 
-    // **** EXECUTE
+    // Execute
     StringSorter sorter = (StringSorter)classes.get("mycompany.myartifact.mycomponent.StringSorterByText").newInstance();
     List<String> notSorted = Arrays.asList("b", "c", "a");
     System.out.println(notSorted);
