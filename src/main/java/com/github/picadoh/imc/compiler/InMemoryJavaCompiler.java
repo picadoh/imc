@@ -57,8 +57,7 @@ public class InMemoryJavaCompiler {
         return new CompilerTool(options);
     }
 
-    @VisibleForTesting
-    String loadClasspath() {
+    protected String loadClasspath() {
         URLClassLoader urlClassLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
 
         List<String> paths = newArrayList();
