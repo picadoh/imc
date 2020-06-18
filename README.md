@@ -10,25 +10,40 @@ This code isn't considered stable thus background compatibility isn't guaranteed
 
 ### API Documentation
 
-    // Compile
+**Compile**
+
     InMemoryJavaCompiler::compile(className, classSourceCode)
         returns CompilerResult
 
     InMemoryJavaCompiler::compile(classSourceMap)
         returns CompilerResult
 
-    // Compilation Results
+**Compilation Results**
+
     CompilerResult::hasErrors()
         returns boolean
 
-    CompilerResult::getCompilationErrors()
-        returns String
+    CompilerResult::getCompilationErrorReport()
+        returns CompilationErrorReport
 
     CompilerResult::loadClassMap()
         returns Map<String,Class<?>>
         throws ClassNotFoundException
 
-#### Sample usage
+**Compilation Error Report**
+
+    CompilationErrorReport::getOptions
+        returns List<String>
+
+    CompilationErrorReport::getErrors
+        returns List<CompilationError>
+
+    CompilationErrorReport::toString
+        returns String // default pretty print format
+
+### Samples
+
+#### Basic Sample
 
     String source =
         "public class Main {\n"+
@@ -55,7 +70,7 @@ The `CompilerResult` may include compilation errors, if any.
     CompilerResult result = compiler.compile("Main", source);
 
     if (result.hasErrors()) {
-        System.out.println(result.getCompilationErrors());
+        System.out.println(result.getCompilationErrorReport());
     } else {
         // ...
     }

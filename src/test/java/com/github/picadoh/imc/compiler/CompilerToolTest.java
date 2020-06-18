@@ -2,13 +2,14 @@ package com.github.picadoh.imc.compiler;
 
 import com.github.picadoh.imc.model.JavaSourceString;
 import com.google.common.collect.Lists;
+import org.mockito.Mock;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
 import javax.tools.*;
 import java.io.Writer;
+import java.util.ArrayList;
 import java.util.List;
-import java.util.Locale;
 
 import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.Matchers.*;
@@ -19,6 +20,12 @@ import static org.testng.Assert.*;
 public class CompilerToolTest {
 
     private CompilerTool victim;
+
+    @Mock
+    private Diagnostic<JavaFileObject> diag1;
+
+    @Mock
+    private Diagnostic<JavaFileObject> diag2;
 
     @BeforeTest
     public void setup() {
@@ -61,7 +68,7 @@ public class CompilerToolTest {
 
         assertNotNull(result);
         assertFalse(result.hasErrors());
-        assertTrue(result.getCompilationErrors().isEmpty());
+        assertNull(result.getCompilationErrorReport());
     }
 
     @Test
@@ -74,60 +81,11 @@ public class CompilerToolTest {
         when(manager.getCompilerResult()).thenReturn(new CompilerResult());
 
         DiagnosticCollector<JavaFileObject> collector = new DiagnosticCollector<>();
-        collector.report(new Diagnostic<JavaFileObject>() {
-            @Override
-            public Kind getKind() {
-                return Kind.ERROR;
-            }
-
-            @Override
-            public JavaFileObject getSource() {
-                return new JavaSourceString("name", "code");
-            }
-
-            @Override
-            public long getPosition() {
-                return 50;
-            }
-
-            @Override
-            public long getStartPosition() {
-                return 0;
-            }
-
-            @Override
-            public long getEndPosition() {
-                return 100;
-            }
-
-            @Override
-            public long getLineNumber() {
-                return 10;
-            }
-
-            @Override
-            public long getColumnNumber() {
-                return 20;
-            }
-
-            @Override
-            public String getCode() {
-                return "errorCode";
-            }
-
-            @Override
-            public String getMessage(Locale locale) {
-                return "errorMessage";
-            }
-        });
+        collector.report(diag1);
+        collector.report(diag2);
 
         JavaCompiler.CompilationTask task = mock(JavaCompiler.CompilationTask.class);
         when(task.call()).thenReturn(false);
-
-        List<JavaSourceString> sources = newArrayList(
-                new JavaSourceString("HelloWorld1", "public class HelloWorld1 {}"),
-                new JavaSourceString("HelloWorld2", "public class HelloWorld2 {}")
-        );
 
         doReturn(collector).when(spiedVictim).getDiagnosticCollector();
         doReturn(compiler).when(spiedVictim).getSystemJavaCompiler();
@@ -142,12 +100,16 @@ public class CompilerToolTest {
                 anyListOf(JavaSourceString.class)))
                 .thenReturn(task);
 
-        CompilerResult result = spiedVictim.compile(sources);
+        CompilerResult result = spiedVictim.compile(Lists.<JavaSourceString>newArrayList());
+
+        List<Diagnostic<? extends JavaFileObject>> diagnostics = new ArrayList<>();
+        diagnostics.add(diag1);
+        diagnostics.add(diag2);
 
         assertNotNull(result);
         assertTrue(result.hasErrors());
-        assertTrue(result.getCompilationErrors().contains("ERROR:errorCode"));
-        assertTrue(result.getCompilationErrors().contains("10:20"));
+        assertEquals(result.getCompilationErrorReport().getOptions(), newArrayList("-classpath", "my.jar"));
+        assertEquals(result.getCompilationErrorReport().getDiagnostics(), diagnostics);
     }
 
 }

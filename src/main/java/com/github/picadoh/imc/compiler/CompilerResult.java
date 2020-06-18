@@ -1,6 +1,7 @@
 package com.github.picadoh.imc.compiler;
 
 import com.github.picadoh.imc.model.CompiledClass;
+import com.github.picadoh.imc.report.CompilationErrorReport;
 import com.google.common.annotations.VisibleForTesting;
 import com.google.common.base.Objects;
 import com.google.common.collect.Lists;
@@ -8,7 +9,6 @@ import com.google.common.collect.Lists;
 import java.util.List;
 import java.util.Map;
 
-import static com.google.common.base.Strings.isNullOrEmpty;
 import static com.google.common.collect.Maps.newHashMap;
 
 /**
@@ -16,38 +16,37 @@ import static com.google.common.collect.Maps.newHashMap;
  */
 public class CompilerResult {
     private final List<CompiledClass> compiledClasses;
-    private final String compilationErrors;
+    private final CompilationErrorReport compilationErrorReport;
 
     CompilerResult() {
         this(Lists.<CompiledClass>newArrayList());
     }
 
     CompilerResult(List<CompiledClass> compiledClasses) {
-        this(compiledClasses, "");
+        this(compiledClasses, null);
     }
 
-
-    CompilerResult(List<CompiledClass> compiledClasses, String compilationErrors) {
+    CompilerResult(List<CompiledClass> compiledClasses, CompilationErrorReport compilationErrorReport) {
         this.compiledClasses = compiledClasses;
-        this.compilationErrors = compilationErrors;
+        this.compilationErrorReport = compilationErrorReport;
     }
 
-    CompilerResult withCompilationErrors(String compilationErrors) {
-        return new CompilerResult(compiledClasses, compilationErrors);
+    CompilerResult withCompilationErrorReport(CompilationErrorReport compilationErrorReport) {
+        return new CompilerResult(compiledClasses, compilationErrorReport);
     }
 
     /**
-     * @return String containing the compilation errors
+     * @return Compilation Error Report when compilation fails or null otherwise
      */
-    public String getCompilationErrors() {
-        return compilationErrors;
+    public CompilationErrorReport getCompilationErrorReport() {
+        return compilationErrorReport;
     }
 
     /**
      * @return True if there are compilation errors
      */
     public boolean hasErrors() {
-        return !isNullOrEmpty(compilationErrors);
+        return compilationErrorReport != null;
     }
 
     /**

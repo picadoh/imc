@@ -1,9 +1,13 @@
 package com.github.picadoh.imc.compiler;
 
 import com.github.picadoh.imc.model.JavaSourceString;
+import com.github.picadoh.imc.report.CompilationErrorReport;
 import com.google.common.annotations.VisibleForTesting;
 
-import javax.tools.*;
+import javax.tools.DiagnosticCollector;
+import javax.tools.JavaCompiler;
+import javax.tools.JavaFileObject;
+import javax.tools.ToolProvider;
 import java.nio.charset.Charset;
 import java.util.List;
 import java.util.Locale;
@@ -27,7 +31,7 @@ class CompilerTool {
         CompilerResult compilerResult = classManager.getCompilerResult();
 
         if (!task.call()) {
-            return compilerResult.withCompilationErrors(getCompilationReport(diagnosticCollector));
+            return compilerResult.withCompilationErrorReport(getCompilationErrorReport(diagnosticCollector));
         }
 
         return compilerResult;
@@ -39,32 +43,8 @@ class CompilerTool {
     }
 
     @VisibleForTesting
-    protected String getCompilationReport(DiagnosticCollector<JavaFileObject> collector) {
-        StringBuilder resultBuilder = new StringBuilder("[Error compiling classes] ");
-
-        resultBuilder.append("options: ")
-                .append(options)
-                .append("\n");
-
-        for (Diagnostic<?> diagnostic : collector.getDiagnostics()) {
-            JavaSourceString javaSource = (JavaSourceString) diagnostic.getSource();
-
-            resultBuilder
-                    .append(javaSource.getName())
-                    .append(" -> ")
-                    .append(diagnostic.getKind())
-                    .append(":")
-                    .append(diagnostic.getCode())
-                    .append(" (")
-                    .append(diagnostic.getLineNumber())
-                    .append(":")
-                    .append(diagnostic.getColumnNumber())
-                    .append(") ")
-                    .append(diagnostic.getMessage(Locale.getDefault()))
-                    .append("\n");
-        }
-
-        return resultBuilder.toString();
+    CompilationErrorReport getCompilationErrorReport(DiagnosticCollector<JavaFileObject> collector) {
+        return new CompilationErrorReport(options, collector.getDiagnostics());
     }
 
     @VisibleForTesting

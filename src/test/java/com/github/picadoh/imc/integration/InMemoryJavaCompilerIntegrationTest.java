@@ -58,8 +58,10 @@ public class InMemoryJavaCompilerIntegrationTest {
         CompilerResult compilerResult = new InMemoryJavaCompiler().compile("HelloWorldFailed", sourceHelloWorldFailed);
 
         assertTrue(compilerResult.hasErrors());
-        assertTrue(compilerResult.getCompilationErrors().contains("ERROR:compiler.err.not.stmt (3:15) not a statement"));
-        assertTrue(compilerResult.getCompilationErrors().contains("ERROR:compiler.err.expected (3:19) ';' expected"));
+        assertTrue(compilerResult.getCompilationErrorReport().toString()
+                .contains("HelloWorldFailed -> ERROR:compiler.err.not.stmt (3:15) not a statement"));
+        assertTrue(compilerResult.getCompilationErrorReport().toString()
+                .contains("HelloWorldFailed -> ERROR:compiler.err.expected (3:19) ';' expected"));
     }
 
     @Test
