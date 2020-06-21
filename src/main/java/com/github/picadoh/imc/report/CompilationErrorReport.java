@@ -1,7 +1,5 @@
 package com.github.picadoh.imc.report;
 
-import com.google.common.base.Joiner;
-
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
 import java.util.List;
@@ -37,9 +35,9 @@ public class CompilationErrorReport {
             resultBuilder
                     .append(diagnostic.getSource().getName())
                     .append(" -> ")
-                    .append(Joiner.on(":").join(diagnostic.getKind(), diagnostic.getCode()))
+                    .append(diagnostic.getKind()).append(":").append(diagnostic.getCode())
                     .append(" (")
-                    .append(Joiner.on(":").join(diagnostic.getLineNumber(), diagnostic.getColumnNumber()))
+                    .append(diagnostic.getLineNumber()).append(":").append(diagnostic.getColumnNumber())
                     .append(") ")
                     .append(diagnostic.getMessage(Locale.getDefault()))
                     .append("\n");

@@ -1,8 +1,6 @@
 package com.github.picadoh.imc.compiler;
 
-import com.github.picadoh.imc.model.JavaSourceString;
-import com.google.common.collect.Lists;
-import org.mockito.Mock;
+import com.github.picadoh.imc.model.JavaSourceString;import org.mockito.Mock;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
@@ -11,7 +9,7 @@ import java.io.Writer;
 import java.util.ArrayList;
 import java.util.List;
 
-import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Arrays.asList;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
@@ -31,7 +29,7 @@ public class CompilerToolTest {
     public void setup() {
         initMocks(this);
 
-        this.victim = new CompilerTool(Lists.newArrayList("-classpath", "my.jar"));
+        this.victim = new CompilerTool(asList("-classpath", "my.jar"));
     }
 
     @Test
@@ -47,7 +45,7 @@ public class CompilerToolTest {
         JavaCompiler.CompilationTask task = mock(JavaCompiler.CompilationTask.class);
         when(task.call()).thenReturn(true);
 
-        List<JavaSourceString> sources = newArrayList(
+        List<JavaSourceString> sources = asList(
                 new JavaSourceString("HelloWorld1", "public class HelloWorld1 {}"),
                 new JavaSourceString("HelloWorld2", "public class HelloWorld2 {}")
         );
@@ -100,7 +98,7 @@ public class CompilerToolTest {
                 anyListOf(JavaSourceString.class)))
                 .thenReturn(task);
 
-        CompilerResult result = spiedVictim.compile(Lists.<JavaSourceString>newArrayList());
+        CompilerResult result = spiedVictim.compile(new ArrayList<JavaSourceString>());
 
         List<Diagnostic<? extends JavaFileObject>> diagnostics = new ArrayList<>();
         diagnostics.add(diag1);
@@ -108,7 +106,7 @@ public class CompilerToolTest {
 
         assertNotNull(result);
         assertTrue(result.hasErrors());
-        assertEquals(result.getCompilationErrorReport().getOptions(), newArrayList("-classpath", "my.jar"));
+        assertEquals(result.getCompilationErrorReport().getOptions(), asList("-classpath", "my.jar"));
         assertEquals(result.getCompilationErrorReport().getDiagnostics(), diagnostics);
     }
 

@@ -2,17 +2,18 @@ package com.github.picadoh.imc.integration;
 
 import com.github.picadoh.imc.compiler.InMemoryJavaCompiler;
 import com.github.picadoh.imc.compiler.CompilerResult;
-import com.google.common.base.Charsets;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.io.Resources;
 import org.testng.annotations.BeforeClass;
 import org.testng.annotations.Test;
 
 import java.io.IOException;
+import java.nio.charset.Charset;
+import java.nio.file.Files;
+import java.nio.file.Paths;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertTrue;
 
@@ -26,11 +27,11 @@ public class InMemoryJavaCompilerIntegrationTest {
 
     @BeforeClass
     public void setupScenario() throws Exception {
-        sourceHelloWorld = readAllText("test-input/HelloWorld.java");
-        sourceHelloWorldPackaged = readAllText("test-input/HelloWorldPackaged.java");
-        sourceHelloWorldFailed = readAllText("test-input/HelloWorldFailed.java");
-        sourceStringLengthSort = readAllText("test-input/StringLengthSort.java");
-        sourceStringSorterByLength = readAllText("test-input/StringSorterByLength.java");
+        sourceHelloWorld = readAllText("src/test/resources/test-input/HelloWorld.java");
+        sourceHelloWorldPackaged = readAllText("src/test/resources/test-input/HelloWorldPackaged.java");
+        sourceHelloWorldFailed = readAllText("src/test/resources/test-input/HelloWorldFailed.java");
+        sourceStringLengthSort = readAllText("src/test/resources/test-input/StringLengthSort.java");
+        sourceStringSorterByLength = readAllText("src/test/resources/test-input/StringSorterByLength.java");
     }
 
     @Test
@@ -71,10 +72,10 @@ public class InMemoryJavaCompilerIntegrationTest {
         Map<String, Class<?>> classes = compilerResult.loadClassMap();
         Object instance = classes.get("StringLengthSort").newInstance();
 
-        List<String> inputList = newArrayList("aaa", "b", "aa", "a");
+        List<String> inputList = asList("aaa", "b", "aa", "a");
         classes.get("StringLengthSort").getMethod("sort", List.class).invoke(instance, inputList);
 
-        assertEquals(inputList, newArrayList("b", "a", "aa", "aaa"));
+        assertEquals(inputList, asList("b", "a", "aa", "aaa"));
         assertEquals(classes.size(), 2);
     }
 
@@ -82,10 +83,12 @@ public class InMemoryJavaCompilerIntegrationTest {
     public void shouldCompileAndExecuteMultipleClassesWithDependencies() throws Exception {
 
         Map<String, Class<?>> classes = new InMemoryJavaCompiler().compile(
-                ImmutableMap.<String, String>builder()
-                        .put("StringLengthSort", sourceStringLengthSort)
-                        .put("HelloWorld", sourceHelloWorld)
-                        .build()
+                new HashMap<String, String>() {
+                    {
+                        put("StringLengthSort", sourceStringLengthSort);
+                        put("HelloWorld", sourceHelloWorld);
+                    }
+                }
         ).loadClassMap();
 
         Class<?> stringLengthSortClass = classes.get("StringLengthSort");
@@ -95,28 +98,30 @@ public class InMemoryJavaCompilerIntegrationTest {
 
         Object stringLengthSortInstance = stringLengthSortClass.newInstance();
 
-        List<String> inputList = newArrayList("aaa", "b", "aa", "a");
+        List<String> inputList = asList("aaa", "b", "aa", "a");
         stringLengthSortClass.getMethod("sort", List.class).invoke(stringLengthSortInstance, inputList);
 
-        assertEquals(inputList, newArrayList("b", "a", "aa", "aaa"));
+        assertEquals(inputList, asList("b", "a", "aa", "aaa"));
         assertEquals(classes.size(), 3);
     }
 
     @Test
     public void shouldCompileClassImplementingKnownInterface() throws Exception {
         Map<String, Class<?>> classes = new InMemoryJavaCompiler().compile(
-                ImmutableMap.<String, String>builder()
-                        .put("StringLengthSort", sourceStringLengthSort)
-                        .put("StringSorterByLength", sourceStringSorterByLength)
-                        .build()
+                new HashMap<String, String>() {
+                    {
+                        put("StringLengthSort", sourceStringLengthSort);
+                        put("StringSorterByLength", sourceStringSorterByLength);
+                    }
+                }
         ).loadClassMap();
 
         StringSorter instance = (StringSorter) classes.get("StringSorterByLength").newInstance();
 
-        List<String> inputList = newArrayList("aaa", "b", "aa", "a");
+        List<String> inputList = asList("aaa", "b", "aa", "a");
         instance.sort(inputList);
 
-        assertEquals(inputList, newArrayList("b", "a", "aa", "aaa"));
+        assertEquals(inputList, asList("b", "a", "aa", "aaa"));
         assertEquals(classes.size(), 3);
     }
 
@@ -125,6 +130,6 @@ public class InMemoryJavaCompilerIntegrationTest {
     }
 
     private String readAllText(String path) throws IOException {
-        return Resources.toString(Resources.getResource(path), Charsets.UTF_8);
+        return new String(Files.readAllBytes(Paths.get(path)), Charset.defaultCharset());
     }
 }

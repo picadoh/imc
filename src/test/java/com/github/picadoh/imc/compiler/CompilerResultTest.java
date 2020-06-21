@@ -1,14 +1,13 @@
 package com.github.picadoh.imc.compiler;
 
 import com.github.picadoh.imc.model.CompiledClass;
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import org.testng.annotations.BeforeTest;
 import org.testng.annotations.Test;
 
+import java.util.HashMap;
 import java.util.Map;
 
-import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -21,12 +20,12 @@ public class CompilerResultTest {
     public void setup() {
         CompiledClass compiledClass1 = mockClassBytecode(String.class);
         CompiledClass compiledClass2 = mockClassBytecode(Integer.class);
-        victim = new CompilerResult(newArrayList(compiledClass1, compiledClass2));
+        victim = new CompilerResult(asList(compiledClass1, compiledClass2));
     }
 
     @Test
     public void shouldCreateByteCodeClassLoader() {
-        assertNotNull(victim.newByteCodeClassLoader(Maps.<String, byte[]>newHashMap()));
+        assertNotNull(victim.newByteCodeClassLoader(new HashMap<String, byte[]>()));
     }
 
     @Test
@@ -35,10 +34,12 @@ public class CompilerResultTest {
 
         ByteCodeClassLoader loader = mock(ByteCodeClassLoader.class);
 
-        Map<String, Class<?>> classes = ImmutableMap.<String, Class<?>>builder()
-                .put(String.class.getName(), String.class)
-                .put(Integer.class.getName(), Integer.class)
-                .build();
+        Map<String, Class<?>> classes = new HashMap<String, Class<?>>() {
+            {
+                put(String.class.getName(), String.class);
+                put(Integer.class.getName(), Integer.class);
+            }
+        };
 
         when(loader.loadClasses()).thenReturn(classes);
 
@@ -59,7 +60,7 @@ public class CompilerResultTest {
         ByteCodeClassLoader loader = mock(ByteCodeClassLoader.class);
         when(loader.loadClasses()).thenThrow(new ClassNotFoundException());
 
-        doReturn(loader).when(spiedVictim).newByteCodeClassLoader(Maps.<String, byte[]>newHashMap());
+        doReturn(loader).when(spiedVictim).newByteCodeClassLoader(new HashMap<String, byte[]>());
 
         spiedVictim.loadClassMap();
     }

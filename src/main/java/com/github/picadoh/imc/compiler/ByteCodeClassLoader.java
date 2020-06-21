@@ -1,12 +1,9 @@
 package com.github.picadoh.imc.compiler;
 
-import com.google.common.annotations.VisibleForTesting;
-
 import java.security.AccessController;
 import java.security.PrivilegedAction;
+import java.util.HashMap;
 import java.util.Map;
-
-import static com.google.common.collect.Maps.newHashMap;
 
 class ByteCodeClassLoader extends ClassLoader {
 
@@ -27,9 +24,9 @@ class ByteCodeClassLoader extends ClassLoader {
     }
 
     public Map<String, Class<?>> loadClasses() throws ClassNotFoundException {
-        Map<String, Class<?>> classes = newHashMap();
+        Map<String, Class<?>> classes = new HashMap<>();
 
-        for (String fqn: byteCodes.keySet()) {
+        for (String fqn : byteCodes.keySet()) {
             classes.put(fqn, loadClass(fqn));
         }
 
@@ -46,7 +43,6 @@ class ByteCodeClassLoader extends ClassLoader {
         }
     }
 
-    @VisibleForTesting
     Class<?> defineClass(String fqn, byte[] bytecode) {
         return defineClass(fqn, bytecode, 0, bytecode.length);
     }

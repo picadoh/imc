@@ -1,9 +1,8 @@
 package com.github.picadoh.imc.model;
 
-import com.google.common.base.Objects;
-
 import javax.tools.SimpleJavaFileObject;
 import java.io.*;
+import java.util.Objects;
 
 public class CompiledClass extends SimpleJavaFileObject {
     private final String className;
@@ -35,18 +34,14 @@ public class CompiledClass extends SimpleJavaFileObject {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         CompiledClass that = (CompiledClass) o;
-        return Objects.equal(uri, that.uri);
+        return Objects.equals(uri, that.uri);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(uri);
+        return Objects.hash(uri);
     }
 }

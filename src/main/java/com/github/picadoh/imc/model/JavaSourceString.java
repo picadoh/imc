@@ -1,8 +1,7 @@
 package com.github.picadoh.imc.model;
 
-import com.google.common.base.Objects;
-
 import javax.tools.SimpleJavaFileObject;
+import java.util.Objects;
 
 public class JavaSourceString extends SimpleJavaFileObject {
     private final String className;
@@ -30,19 +29,15 @@ public class JavaSourceString extends SimpleJavaFileObject {
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         JavaSourceString that = (JavaSourceString) o;
-        return Objects.equal(className, that.className) &&
-                Objects.equal(classSourceCode, that.classSourceCode);
+        return Objects.equals(className, that.className) &&
+                Objects.equals(classSourceCode, that.classSourceCode);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(className, classSourceCode);
+        return Objects.hash(className, classSourceCode);
     }
 }

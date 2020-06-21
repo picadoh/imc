@@ -2,18 +2,16 @@ package com.github.picadoh.imc.compiler;
 
 import com.github.picadoh.imc.model.CompiledClass;
 import com.github.picadoh.imc.model.JavaSourceString;
-import com.google.common.base.Strings;
-import com.google.common.collect.ImmutableMap;
 import org.testng.annotations.BeforeMethod;
 import org.testng.annotations.Test;
 
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
-import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Arrays.asList;
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertFalse;
+import static org.testng.Assert.*;
 
 public class InMemoryJavaCompilerTest {
 
@@ -33,9 +31,11 @@ public class InMemoryJavaCompilerTest {
 
         spiedVictim.compile("HelloWorld", "public class HelloWorld {}");
 
-        Map<String, String> sources = ImmutableMap.<String, String>builder()
-                .put("HelloWorld", "public class HelloWorld {}")
-                .build();
+        Map<String, String> sources = new HashMap<String, String>() {
+            {
+                put("HelloWorld", "public class HelloWorld {}");
+            }
+        };
 
         verify(spiedVictim, times(1)).compile(sources);
     }
@@ -44,7 +44,7 @@ public class InMemoryJavaCompilerTest {
     public void shouldCompileManyClasses() {
         InMemoryJavaCompiler spiedVictim = spy(victim);
 
-        List<CompiledClass> compiledClasses = newArrayList(
+        List<CompiledClass> compiledClasses = asList(
                 mockCompiledClass(String.class.getSimpleName()), mockCompiledClass(Integer.class.getSimpleName()));
 
         CompilerTool compilerTool = mock(CompilerTool.class);
@@ -52,10 +52,12 @@ public class InMemoryJavaCompilerTest {
 
         doReturn(compilerTool).when(spiedVictim).getCompilerTool(anyListOf(String.class));
 
-        Map<String, String> sources = ImmutableMap.<String, String>builder()
-                .put("HelloWorld1", "public class HelloWorld1 {}")
-                .put("HelloWorld2", "public class HelloWorld2 {}")
-                .build();
+        Map<String, String> sources = new HashMap<String, String>() {
+            {
+                put("HelloWorld1", "public class HelloWorld1 {}");
+                put("HelloWorld2", "public class HelloWorld2 {}");
+            }
+        };
 
         CompilerResult result = spiedVictim.compile(sources);
 
@@ -66,7 +68,15 @@ public class InMemoryJavaCompilerTest {
 
     @Test
     public void shouldLoadClassPath() {
-        assertFalse(Strings.isNullOrEmpty(victim.loadClasspath()));
+        String classpath = victim.loadClasspath();
+        assertNotNull(classpath);
+        assertNotEquals("", classpath);
+    }
+
+    @Test
+    public void shouldJoinPaths() {
+        String joined = victim.joinPaths(asList("a", "b"));
+        assertEquals("a" + System.getProperty("path.separator") + "b", joined);
     }
 
     private CompiledClass mockCompiledClass(String className) {

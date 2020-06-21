@@ -1,9 +1,8 @@
 package com.github.picadoh.imc.compiler;
 
-import com.google.common.collect.ImmutableMap;
-import com.google.common.collect.Maps;
 import org.testng.annotations.Test;
 
+import java.util.HashMap;
 import java.util.Map;
 
 import static org.mockito.Matchers.any;
@@ -16,7 +15,7 @@ public class ByteCodeClassLoaderTest {
 
     @Test
     public void shouldFindClass() throws Exception {
-        ByteCodeClassLoader victim = spy(ByteCodeClassLoader.create(Maps.<String, byte[]>newHashMap()));
+        ByteCodeClassLoader victim = spy(ByteCodeClassLoader.create(new HashMap<String, byte[]>()));
 
         doReturn(String.class).when(victim).defineClass(anyString(), any(byte[].class));
 
@@ -28,7 +27,7 @@ public class ByteCodeClassLoaderTest {
 
     @Test(expectedExceptions = ClassNotFoundException.class)
     public void shouldThrowExceptionWhenClassNotFound() throws Exception {
-        ByteCodeClassLoader victim = spy(ByteCodeClassLoader.create(Maps.<String, byte[]>newHashMap()));
+        ByteCodeClassLoader victim = spy(ByteCodeClassLoader.create(new HashMap<String, byte[]>()));
 
         doThrow(ClassFormatError.class).when(victim).defineClass(anyString(), any(byte[].class));
 
@@ -38,9 +37,11 @@ public class ByteCodeClassLoaderTest {
     @Test
     public void shouldLoadClass() throws ClassNotFoundException {
         ByteCodeClassLoader victim = spy(ByteCodeClassLoader.create(
-                ImmutableMap.<String, byte[]>builder()
-                        .put(String.class.getName(), new byte[]{1, 2, 3})
-                        .build()
+                new HashMap<String, byte[]>() {
+                    {
+                        put(String.class.getName(), new byte[]{1, 2, 3});
+                    }
+                }
         ));
 
         doReturn(String.class).when(victim).loadClass(anyString());
@@ -55,9 +56,11 @@ public class ByteCodeClassLoaderTest {
     @Test(expectedExceptions = ClassNotFoundException.class)
     public void shouldThrowExceptionWhenFailsToLoadClass() throws ClassNotFoundException {
         ByteCodeClassLoader victim = spy(ByteCodeClassLoader.create(
-                ImmutableMap.<String, byte[]>builder()
-                        .put(String.class.getName(), new byte[]{1, 2, 3})
-                        .build()
+                new HashMap<String, byte[]>() {
+                    {
+                        put(String.class.getName(), new byte[]{1, 2, 3});
+                    }
+                }
         ));
 
         doThrow(ClassNotFoundException.class).when(victim).loadClass(anyString());

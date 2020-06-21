@@ -2,7 +2,6 @@ package com.github.picadoh.imc.compiler;
 
 import com.github.picadoh.imc.model.JavaSourceString;
 import com.github.picadoh.imc.report.CompilationErrorReport;
-import com.google.common.annotations.VisibleForTesting;
 
 import javax.tools.DiagnosticCollector;
 import javax.tools.JavaCompiler;
@@ -37,22 +36,19 @@ class CompilerTool {
         return compilerResult;
     }
 
-    @VisibleForTesting
     JavaCompiler getSystemJavaCompiler() {
         return ToolProvider.getSystemJavaCompiler();
     }
 
-    @VisibleForTesting
+
     CompilationErrorReport getCompilationErrorReport(DiagnosticCollector<JavaFileObject> collector) {
         return new CompilationErrorReport(options, collector.getDiagnostics());
     }
 
-    @VisibleForTesting
     DiagnosticCollector<JavaFileObject> getDiagnosticCollector() {
         return new DiagnosticCollector<>();
     }
 
-    @VisibleForTesting
     InMemoryJavaFileManager getClassManager(JavaCompiler compiler) {
         return new InMemoryJavaFileManager(compiler.getStandardFileManager(null,
                 Locale.getDefault(), Charset.defaultCharset()));

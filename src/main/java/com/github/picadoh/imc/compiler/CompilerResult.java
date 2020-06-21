@@ -2,14 +2,8 @@ package com.github.picadoh.imc.compiler;
 
 import com.github.picadoh.imc.model.CompiledClass;
 import com.github.picadoh.imc.report.CompilationErrorReport;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Objects;
-import com.google.common.collect.Lists;
 
-import java.util.List;
-import java.util.Map;
-
-import static com.google.common.collect.Maps.newHashMap;
+import java.util.*;
 
 /**
  * The result of the compilation execution
@@ -19,7 +13,7 @@ public class CompilerResult {
     private final CompilationErrorReport compilationErrorReport;
 
     CompilerResult() {
-        this(Lists.<CompiledClass>newArrayList());
+        this(new ArrayList<CompiledClass>());
     }
 
     CompilerResult(List<CompiledClass> compiledClasses) {
@@ -56,7 +50,7 @@ public class CompilerResult {
      * @throws ClassNotFoundException When fails to load the bytecode into a Class
      */
     public Map<String, Class<?>> loadClassMap() throws ClassNotFoundException {
-        Map<String, byte[]> byteCodes = newHashMap();
+        Map<String, byte[]> byteCodes = new HashMap<>();
         for (CompiledClass compiled : compiledClasses) {
             byteCodes.put(compiled.getClassName(), compiled.getClassByteCode());
         }
@@ -70,30 +64,25 @@ public class CompilerResult {
         compiledClasses.add(compiledClass);
     }
 
-    @VisibleForTesting
     List<CompiledClass> getCompiledClasses() {
         return compiledClasses;
     }
 
-    @VisibleForTesting
     ByteCodeClassLoader newByteCodeClassLoader(Map<String, byte[]> byteCodes) {
         return ByteCodeClassLoader.create(byteCodes);
     }
 
     @Override
     public boolean equals(Object o) {
-        if (this == o) {
-            return true;
-        }
-        if (o == null || getClass() != o.getClass()) {
-            return false;
-        }
+        if (this == o) return true;
+        if (o == null || getClass() != o.getClass()) return false;
         CompilerResult that = (CompilerResult) o;
-        return Objects.equal(compiledClasses, that.compiledClasses);
+        return Objects.equals(compiledClasses, that.compiledClasses) &&
+                Objects.equals(compilationErrorReport, that.compilationErrorReport);
     }
 
     @Override
     public int hashCode() {
-        return Objects.hashCode(compiledClasses);
+        return Objects.hash(compiledClasses, compilationErrorReport);
     }
 }

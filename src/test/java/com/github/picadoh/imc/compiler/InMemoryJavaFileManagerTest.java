@@ -7,8 +7,8 @@ import javax.tools.FileObject;
 import javax.tools.JavaFileManager;
 import javax.tools.JavaFileObject;
 import java.io.IOException;
+import java.util.Collections;
 
-import static com.google.common.collect.Lists.newArrayList;
 import static org.mockito.Mockito.mock;
 import static org.testng.Assert.assertEquals;
 import static org.testng.Assert.assertNotNull;
@@ -30,7 +30,7 @@ public class InMemoryJavaFileManagerTest {
 
         CompiledClass expectedCompiledClass = new CompiledClass("SomeName");
 
-        assertEquals(victim.getCompilerResult(), new CompilerResult(newArrayList(expectedCompiledClass)));
+        assertEquals(victim.getCompilerResult(), new CompilerResult(Collections.singletonList(expectedCompiledClass)));
     }
 
 }

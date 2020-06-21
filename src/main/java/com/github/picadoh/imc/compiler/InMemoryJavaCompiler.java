@@ -1,17 +1,10 @@
 package com.github.picadoh.imc.compiler;
 
 import com.github.picadoh.imc.model.JavaSourceString;
-import com.google.common.annotations.VisibleForTesting;
-import com.google.common.base.Joiner;
-import com.google.common.collect.ImmutableMap;
 
 import java.net.URL;
 import java.net.URLClassLoader;
-import java.util.Arrays;
-import java.util.List;
-import java.util.Map;
-
-import static com.google.common.collect.Lists.newArrayList;
+import java.util.*;
 
 /**
  * Compiles java source code from source strings into byte arrays
@@ -26,11 +19,12 @@ public class InMemoryJavaCompiler {
      * @param classSourceCode Class source code
      * @return CompilerResult containing compiled classes or possible compilation errors
      */
-    public CompilerResult compile(String className, String classSourceCode) {
-        return compile(ImmutableMap.<String, String>builder()
-                .put(className, classSourceCode)
-                .build()
-        );
+    public CompilerResult compile(final String className, final String classSourceCode) {
+        return compile(new HashMap<String, String>() {
+            {
+                put(className, classSourceCode);
+            }
+        });
     }
 
     /**
@@ -43,7 +37,7 @@ public class InMemoryJavaCompiler {
     public CompilerResult compile(Map<String, String> classSourceMap) {
         List<String> options = Arrays.asList("-classpath", loadClasspath());
 
-        List<JavaSourceString> sources = newArrayList();
+        List<JavaSourceString> sources = new ArrayList<>();
         for (Map.Entry<String, String> classSource : classSourceMap.entrySet()) {
             sources.add(new JavaSourceString(classSource.getKey(), classSource.getValue()));
         }
@@ -52,7 +46,6 @@ public class InMemoryJavaCompiler {
         return tool.compile(sources);
     }
 
-    @VisibleForTesting
     CompilerTool getCompilerTool(List<String> options) {
         return new CompilerTool(options);
     }
@@ -60,11 +53,25 @@ public class InMemoryJavaCompiler {
     protected String loadClasspath() {
         URLClassLoader urlClassLoader = (URLClassLoader) Thread.currentThread().getContextClassLoader();
 
-        List<String> paths = newArrayList();
+        List<String> paths = new ArrayList<>();
         for (URL url : urlClassLoader.getURLs()) {
             paths.add(url.getPath());
         }
 
-        return Joiner.on(System.getProperty("path.separator")).join(paths);
+        return joinPaths(paths);
+    }
+
+    String joinPaths(List<String> elements) {
+        if (elements.isEmpty()) {
+            return "";
+        }
+
+        String separator = System.getProperty("path.separator");
+        StringBuilder builder = new StringBuilder(elements.get(0));
+        for (int i = 1; i < elements.size(); i++) {
+            builder.append(separator).append(elements.get(i));
+        }
+
+        return builder.toString();
     }
 }

@@ -9,13 +9,13 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 
-import static com.google.common.collect.Lists.newArrayList;
+import static java.util.Arrays.asList;
 import static org.testng.Assert.assertEquals;
 
 public class CompilationErrorReportTest {
     @Test
     public void shouldCreateCompilationErrorReport() {
-        List<String> options = newArrayList("option1", "option2");
+        List<String> options = asList("option1", "option2");
 
         List<Diagnostic<? extends JavaFileObject>> diagnostics = new ArrayList<>();
         diagnostics.add(buildDiagnostic("cls1", 1, 10, "msg1"));
@@ -23,7 +23,7 @@ public class CompilationErrorReportTest {
 
         CompilationErrorReport report = new CompilationErrorReport(options, diagnostics);
 
-        assertEquals(report.getOptions(), newArrayList("option1", "option2"));
+        assertEquals(report.getOptions(), asList("option1", "option2"));
         assertEquals(report.getDiagnostics(), diagnostics);
 
         assertEquals(report.toString(),
