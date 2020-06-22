@@ -1,7 +1,5 @@
 package com.github.picadoh.imc.compiler;
 
-import com.github.picadoh.imc.model.JavaSourceString;
-
 import java.net.URL;
 import java.net.URLClassLoader;
 import java.util.*;
@@ -9,7 +7,7 @@ import java.util.*;
 /**
  * Compiles java source code from source strings into byte arrays
  */
-public class InMemoryJavaCompiler {
+public class InMemoryCompiler {
 
     /**
      * Compiles a class given its name and code.
@@ -37,9 +35,9 @@ public class InMemoryJavaCompiler {
     public CompilerResult compile(Map<String, String> classSourceMap) {
         List<String> options = Arrays.asList("-classpath", loadClasspath());
 
-        List<JavaSourceString> sources = new ArrayList<>();
+        List<SourceCode> sources = new ArrayList<>();
         for (Map.Entry<String, String> classSource : classSourceMap.entrySet()) {
-            sources.add(new JavaSourceString(classSource.getKey(), classSource.getValue()));
+            sources.add(new SourceCode(classSource.getKey(), classSource.getValue()));
         }
 
         CompilerTool tool = getCompilerTool(options);

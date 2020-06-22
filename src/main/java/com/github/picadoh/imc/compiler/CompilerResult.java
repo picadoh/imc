@@ -1,6 +1,5 @@
 package com.github.picadoh.imc.compiler;
 
-import com.github.picadoh.imc.model.CompiledClass;
 import com.github.picadoh.imc.report.CompilationErrorReport;
 
 import java.util.*;

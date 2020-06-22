@@ -1,6 +1,5 @@
 package com.github.picadoh.imc.compiler;
 
-import com.github.picadoh.imc.model.CompiledClass;
 import org.junit.Before;
 import org.junit.Test;
 

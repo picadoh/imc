@@ -1,6 +1,6 @@
 package com.github.picadoh.imc.integration;
 
-import com.github.picadoh.imc.compiler.InMemoryJavaCompiler;
+import com.github.picadoh.imc.compiler.InMemoryCompiler;
 import com.github.picadoh.imc.compiler.CompilerResult;
 import org.junit.Before;
 import org.junit.Test;
@@ -17,7 +17,7 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertTrue;
 
-public class InMemoryJavaCompilerIntegrationTest {
+public class InMemoryCompilerIntegrationTest {
 
     private String sourceHelloWorld;
     private String sourceHelloWorldPackaged;
@@ -36,7 +36,7 @@ public class InMemoryJavaCompilerIntegrationTest {
 
     @Test
     public void shouldCompileAndExecuteSimpleClass() throws Exception {
-        CompilerResult compilerResult = new InMemoryJavaCompiler().compile("HelloWorld", sourceHelloWorld);
+        CompilerResult compilerResult = new InMemoryCompiler().compile("HelloWorld", sourceHelloWorld);
 
         Map<String, Class<?>> classes = compilerResult.loadClassMap();
 
@@ -46,7 +46,7 @@ public class InMemoryJavaCompilerIntegrationTest {
 
     @Test
     public void shouldCompileAndExecuteSimpleClassInsidePackage() throws Exception {
-        CompilerResult compilerResult = new InMemoryJavaCompiler().compile("com.example.HelloWorld", sourceHelloWorldPackaged);
+        CompilerResult compilerResult = new InMemoryCompiler().compile("com.example.HelloWorld", sourceHelloWorldPackaged);
 
         Map<String, Class<?>> classes = compilerResult.loadClassMap();
 
@@ -56,7 +56,7 @@ public class InMemoryJavaCompilerIntegrationTest {
 
     @Test
     public void shouldFailCompilationForInvalidSource() {
-        CompilerResult compilerResult = new InMemoryJavaCompiler().compile("HelloWorldFailed", sourceHelloWorldFailed);
+        CompilerResult compilerResult = new InMemoryCompiler().compile("HelloWorldFailed", sourceHelloWorldFailed);
 
         assertTrue(compilerResult.hasErrors());
         assertTrue(compilerResult.getCompilationErrorReport().toString()
@@ -67,7 +67,7 @@ public class InMemoryJavaCompilerIntegrationTest {
 
     @Test
     public void shouldCompileAndExecuteCodeWithAnonymousClasses() throws Exception {
-        CompilerResult compilerResult = new InMemoryJavaCompiler().compile("StringLengthSort", sourceStringLengthSort);
+        CompilerResult compilerResult = new InMemoryCompiler().compile("StringLengthSort", sourceStringLengthSort);
 
         Map<String, Class<?>> classes = compilerResult.loadClassMap();
         Object instance = classes.get("StringLengthSort").newInstance();
@@ -82,7 +82,7 @@ public class InMemoryJavaCompilerIntegrationTest {
     @Test
     public void shouldCompileAndExecuteMultipleClassesWithDependencies() throws Exception {
 
-        Map<String, Class<?>> classes = new InMemoryJavaCompiler().compile(
+        Map<String, Class<?>> classes = new InMemoryCompiler().compile(
                 new HashMap<String, String>() {
                     {
                         put("StringLengthSort", sourceStringLengthSort);
@@ -107,7 +107,7 @@ public class InMemoryJavaCompilerIntegrationTest {
 
     @Test
     public void shouldCompileClassImplementingKnownInterface() throws Exception {
-        Map<String, Class<?>> classes = new InMemoryJavaCompiler().compile(
+        Map<String, Class<?>> classes = new InMemoryCompiler().compile(
                 new HashMap<String, String>() {
                     {
                         put("StringLengthSort", sourceStringLengthSort);

@@ -1,6 +1,5 @@
 package com.github.picadoh.imc.compiler;
 
-import com.github.picadoh.imc.model.JavaSourceString;
 import com.github.picadoh.imc.report.CompilationErrorReport;
 
 import javax.tools.DiagnosticCollector;
@@ -19,10 +18,10 @@ class CompilerTool {
         this.options = options;
     }
 
-    public CompilerResult compile(List<JavaSourceString> sources) {
+    public CompilerResult compile(List<SourceCode> sources) {
         JavaCompiler compiler = getSystemJavaCompiler();
         DiagnosticCollector<JavaFileObject> diagnosticCollector = getDiagnosticCollector();
-        InMemoryJavaFileManager classManager = getClassManager(compiler);
+        InMemoryFileManager classManager = getClassManager(compiler);
 
         JavaCompiler.CompilationTask task = compiler.getTask(null,
                 classManager, diagnosticCollector, options, null, sources);
@@ -49,8 +48,8 @@ class CompilerTool {
         return new DiagnosticCollector<>();
     }
 
-    InMemoryJavaFileManager getClassManager(JavaCompiler compiler) {
-        return new InMemoryJavaFileManager(compiler.getStandardFileManager(null,
+    InMemoryFileManager getClassManager(JavaCompiler compiler) {
+        return new InMemoryFileManager(compiler.getStandardFileManager(null,
                 Locale.getDefault(), Charset.defaultCharset()));
     }
 }

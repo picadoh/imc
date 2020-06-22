@@ -1,7 +1,5 @@
 package com.github.picadoh.imc.compiler;
 
-import com.github.picadoh.imc.model.CompiledClass;
-import com.github.picadoh.imc.model.JavaSourceString;
 import org.junit.Before;
 import org.junit.Test;
 
@@ -13,18 +11,18 @@ import static java.util.Arrays.asList;
 import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
 
-public class InMemoryJavaCompilerTest {
+public class InMemoryCompilerTest {
 
-    private InMemoryJavaCompiler victim;
+    private InMemoryCompiler victim;
 
     @Before
     public void setupScenario() {
-        victim = new InMemoryJavaCompiler();
+        victim = new InMemoryCompiler();
     }
 
     @Test
     public void shouldCompileOneClass() {
-        InMemoryJavaCompiler spiedVictim = spy(victim);
+        InMemoryCompiler spiedVictim = spy(victim);
 
         CompilerResult compilerResult = mock(CompilerResult.class);
         doReturn(compilerResult).when(spiedVictim).compile(anyMapOf(String.class, String.class));
@@ -42,13 +40,13 @@ public class InMemoryJavaCompilerTest {
 
     @Test
     public void shouldCompileManyClasses() {
-        InMemoryJavaCompiler spiedVictim = spy(victim);
+        InMemoryCompiler spiedVictim = spy(victim);
 
         List<CompiledClass> compiledClasses = asList(
                 mockCompiledClass(String.class.getSimpleName()), mockCompiledClass(Integer.class.getSimpleName()));
 
         CompilerTool compilerTool = mock(CompilerTool.class);
-        when(compilerTool.compile(anyListOf(JavaSourceString.class))).thenReturn(new CompilerResult(compiledClasses));
+        when(compilerTool.compile(anyListOf(SourceCode.class))).thenReturn(new CompilerResult(compiledClasses));
 
         doReturn(compilerTool).when(spiedVictim).getCompilerTool(anyListOf(String.class));
 

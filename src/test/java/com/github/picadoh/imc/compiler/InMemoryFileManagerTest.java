@@ -1,6 +1,5 @@
 package com.github.picadoh.imc.compiler;
 
-import com.github.picadoh.imc.model.CompiledClass;
 import org.junit.Test;
 
 import javax.tools.FileObject;
@@ -13,7 +12,7 @@ import static org.junit.Assert.assertEquals;
 import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
 
-public class InMemoryJavaFileManagerTest {
+public class InMemoryFileManagerTest {
 
     @Test
     public void shouldCreateInMemoryJavaFileManager() throws IOException {
@@ -21,7 +20,7 @@ public class InMemoryJavaFileManagerTest {
         FileObject fileObject = mock(FileObject.class);
 
         JavaFileManager manager = mock(JavaFileManager.class);
-        InMemoryJavaFileManager victim = new InMemoryJavaFileManager(manager);
+        InMemoryFileManager victim = new InMemoryFileManager(manager);
 
         JavaFileObject javaFileObject = victim.getJavaFileForOutput(location, "SomeName", null, fileObject);
 

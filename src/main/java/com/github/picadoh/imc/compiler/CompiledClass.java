@@ -1,10 +1,10 @@
-package com.github.picadoh.imc.model;
+package com.github.picadoh.imc.compiler;
 
 import javax.tools.SimpleJavaFileObject;
 import java.io.*;
 import java.util.Objects;
 
-public class CompiledClass extends SimpleJavaFileObject {
+class CompiledClass extends SimpleJavaFileObject {
     private final String className;
     private final ByteArrayOutputStream classByteCode;
 

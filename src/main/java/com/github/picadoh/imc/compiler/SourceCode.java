@@ -1,13 +1,13 @@
-package com.github.picadoh.imc.model;
+package com.github.picadoh.imc.compiler;
 
 import javax.tools.SimpleJavaFileObject;
 import java.util.Objects;
 
-public class JavaSourceString extends SimpleJavaFileObject {
+class SourceCode extends SimpleJavaFileObject {
     private final String className;
     private final String classSourceCode;
 
-    public JavaSourceString(String className, String classSourceCode) {
+    public SourceCode(String className, String classSourceCode) {
         super(ClassURI.create(className, Kind.SOURCE.extension), Kind.SOURCE);
         this.className = className;
         this.classSourceCode = classSourceCode;
@@ -31,7 +31,7 @@ public class JavaSourceString extends SimpleJavaFileObject {
     public boolean equals(Object o) {
         if (this == o) return true;
         if (o == null || getClass() != o.getClass()) return false;
-        JavaSourceString that = (JavaSourceString) o;
+        SourceCode that = (SourceCode) o;
         return Objects.equals(className, that.className) &&
                 Objects.equals(classSourceCode, that.classSourceCode);
     }

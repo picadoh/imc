@@ -1,6 +1,5 @@
 package com.github.picadoh.imc.report;
 
-import com.github.picadoh.imc.model.JavaSourceString;
 import org.junit.Test;
 
 import javax.tools.Diagnostic;
@@ -11,6 +10,8 @@ import java.util.Locale;
 
 import static java.util.Arrays.asList;
 import static org.junit.Assert.assertEquals;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
 
 public class CompilationErrorReportTest {
     @Test
@@ -35,6 +36,9 @@ public class CompilationErrorReportTest {
 
     private Diagnostic<JavaFileObject> buildDiagnostic(
             final String className, final long line, final long column, final String message) {
+        final JavaFileObject sourceCode = mock(JavaFileObject.class);
+        when(sourceCode.getName()).thenReturn(className);
+
         return new Diagnostic<JavaFileObject>() {
             @Override
             public Kind getKind() {
@@ -43,7 +47,7 @@ public class CompilationErrorReportTest {
 
             @Override
             public JavaFileObject getSource() {
-                return new JavaSourceString(className, "sourceCode");
+                return sourceCode;
             }
 
             @Override

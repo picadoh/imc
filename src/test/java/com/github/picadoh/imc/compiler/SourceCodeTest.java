@@ -1,4 +1,4 @@
-package com.github.picadoh.imc.model;
+package com.github.picadoh.imc.compiler;
 
 import org.junit.Before;
 import org.junit.Test;
@@ -7,16 +7,16 @@ import javax.tools.JavaFileObject;
 
 import static org.junit.Assert.assertEquals;
 
-public class JavaSourceStringTest {
+public class SourceCodeTest {
 
-    private JavaSourceString victim;
+    private SourceCode victim;
 
     private static final String CLASS_NAME = "Main";
     private static final String CLASS_SOURCE_CODE = "public class Main {}";
 
     @Before
     public void setup() {
-        victim = new JavaSourceString(CLASS_NAME, CLASS_SOURCE_CODE);
+        victim = new SourceCode(CLASS_NAME, CLASS_SOURCE_CODE);
     }
 
     @Test

@@ -1,4 +1,4 @@
-package com.github.picadoh.imc.model;
+package com.github.picadoh.imc.compiler;
 
 import org.junit.Test;
 

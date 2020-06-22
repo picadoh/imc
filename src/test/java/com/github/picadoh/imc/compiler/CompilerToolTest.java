@@ -1,6 +1,5 @@
 package com.github.picadoh.imc.compiler;
 
-import com.github.picadoh.imc.model.JavaSourceString;
 import org.junit.Before;
 import org.junit.Test;
 import org.mockito.Mock;
@@ -39,16 +38,16 @@ public class CompilerToolTest {
 
         JavaCompiler compiler = mock(JavaCompiler.class);
 
-        InMemoryJavaFileManager manager = mock(InMemoryJavaFileManager.class);
+        InMemoryFileManager manager = mock(InMemoryFileManager.class);
         when(manager.getCompilerResult()).thenReturn(new CompilerResult());
 
         DiagnosticCollector<JavaFileObject> collector = new DiagnosticCollector<>();
         JavaCompiler.CompilationTask task = mock(JavaCompiler.CompilationTask.class);
         when(task.call()).thenReturn(true);
 
-        List<JavaSourceString> sources = asList(
-                new JavaSourceString("HelloWorld1", "public class HelloWorld1 {}"),
-                new JavaSourceString("HelloWorld2", "public class HelloWorld2 {}")
+        List<SourceCode> sources = asList(
+                new SourceCode("HelloWorld1", "public class HelloWorld1 {}"),
+                new SourceCode("HelloWorld2", "public class HelloWorld2 {}")
         );
 
         doReturn(collector).when(spiedVictim).getDiagnosticCollector();
@@ -76,7 +75,7 @@ public class CompilerToolTest {
 
         JavaCompiler compiler = mock(JavaCompiler.class);
 
-        InMemoryJavaFileManager manager = mock(InMemoryJavaFileManager.class);
+        InMemoryFileManager manager = mock(InMemoryFileManager.class);
         when(manager.getCompilerResult()).thenReturn(new CompilerResult());
 
         DiagnosticCollector<JavaFileObject> collector = new DiagnosticCollector<>();
@@ -96,10 +95,10 @@ public class CompilerToolTest {
                 eq(collector),
                 anyListOf(String.class),
                 anyListOf(String.class),
-                anyListOf(JavaSourceString.class)))
+                anyListOf(SourceCode.class)))
                 .thenReturn(task);
 
-        CompilerResult result = spiedVictim.compile(new ArrayList<JavaSourceString>());
+        CompilerResult result = spiedVictim.compile(new ArrayList<SourceCode>());
 
         List<Diagnostic<? extends JavaFileObject>> diagnostics = new ArrayList<>();
         diagnostics.add(diag1);

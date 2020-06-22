@@ -12,10 +12,10 @@ This code isn't considered stable thus background compatibility isn't guaranteed
 
 **Compile**
 
-    InMemoryJavaCompiler::compile(className, classSourceCode)
+    InMemoryCompiler::compile(className, classSourceCode)
         returns CompilerResult
 
-    InMemoryJavaCompiler::compile(classSourceMap)
+    InMemoryCompiler::compile(classSourceMap)
         returns CompilerResult
 
 **Compilation Results**
@@ -53,7 +53,7 @@ This code isn't considered stable thus background compatibility isn't guaranteed
         "}";
 
     // Compile
-    InMemoryJavaCompiler compiler = new InMemoryJavaCompiler();
+    InMemoryCompiler compiler = new InMemoryCompiler();
     CompilerResult result = compiler.compile("Main", source);
 
     // Load
@@ -66,7 +66,7 @@ This code isn't considered stable thus background compatibility isn't guaranteed
 
 The `CompilerResult` may include compilation errors, if any.
 
-    InMemoryJavaCompiler compiler = new InMemoryJavaCompiler();
+    InMemoryCompiler compiler = new InMemoryCompiler();
     CompilerResult result = compiler.compile("Main", source);
 
     if (result.hasErrors()) {
@@ -100,7 +100,7 @@ If the subject source code implements a known interface to the application execu
 **Usage**
 
     // Compile
-    InMemoryJavaCompiler compiler = new InMemoryJavaCompiler();
+    InMemoryCompiler compiler = new InMemoryCompiler();
     CompilerResult result = compiler.compile("StringSorterByText", source);
 
     // Load
@@ -141,7 +141,7 @@ Your class hierarchy will probably be in a package hierarchy, say `mycompany.mya
 **Usage**
 
     // Compile
-    InMemoryJavaCompiler compiler = new InMemoryJavaCompiler();
+    InMemoryCompiler compiler = new InMemoryCompiler();
     CompilerResult result = compiler.compile("StringSorterByText", source);
 
     // Load
