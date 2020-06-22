@@ -1,22 +1,22 @@
 package com.github.picadoh.imc.compiler;
 
 import com.github.picadoh.imc.model.CompiledClass;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 
 public class CompilerResultTest {
 
     private CompilerResult victim;
 
-    @BeforeTest
+    @Before
     public void setup() {
         CompiledClass compiledClass1 = mockClassBytecode(String.class);
         CompiledClass compiledClass2 = mockClassBytecode(Integer.class);
@@ -48,12 +48,12 @@ public class CompilerResultTest {
         Map<String, Class<?>> classMap = spiedVictim.loadClassMap();
 
         // assert
-        assertEquals(classMap.size(), 2);
-        assertEquals(classMap.get(String.class.getName()), String.class);
-        assertEquals(classMap.get(Integer.class.getName()), Integer.class);
+        assertEquals(2, classMap.size());
+        assertEquals(String.class, classMap.get(String.class.getName()));
+        assertEquals(Integer.class, classMap.get(Integer.class.getName()));
     }
 
-    @Test(expectedExceptions = ClassNotFoundException.class)
+    @Test(expected = ClassNotFoundException.class)
     public void shouldThrowExceptionWhenClassNotFound() throws Exception {
         CompilerResult spiedVictim = spy(victim);
 

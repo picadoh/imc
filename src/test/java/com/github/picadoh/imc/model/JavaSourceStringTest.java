@@ -1,11 +1,11 @@
 package com.github.picadoh.imc.model;
 
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 import javax.tools.JavaFileObject;
 
-import static org.testng.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public class JavaSourceStringTest {
 
@@ -14,29 +14,29 @@ public class JavaSourceStringTest {
     private static final String CLASS_NAME = "Main";
     private static final String CLASS_SOURCE_CODE = "public class Main {}";
 
-    @BeforeTest
+    @Before
     public void setup() {
         victim = new JavaSourceString(CLASS_NAME, CLASS_SOURCE_CODE);
     }
 
     @Test
     public void shouldGetName() {
-        assertEquals(victim.getName(), "Main");
+        assertEquals("Main", victim.getName());
     }
 
     @Test
     public void shouldGetCharSequence() {
-        assertEquals(victim.getCharContent().toString(), "public class Main {}");
+        assertEquals("public class Main {}", victim.getCharContent().toString());
     }
 
     @Test
     public void shouldGetKind() {
-        assertEquals(victim.getKind(), JavaFileObject.Kind.SOURCE);
+        assertEquals(JavaFileObject.Kind.SOURCE, victim.getKind());
     }
 
     @Test
     public void shouldGetSourceURL() {
-        assertEquals(victim.toUri().toString(), "string:///Main.java");
+        assertEquals("string:///Main.java", victim.toUri().toString());
     }
 
 }

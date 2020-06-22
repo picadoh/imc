@@ -1,9 +1,9 @@
 package com.github.picadoh.imc.model;
 
-import org.testng.annotations.Test;
+import org.junit.Test;
 
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 
 public class CompiledClassTest {
 
@@ -11,7 +11,7 @@ public class CompiledClassTest {
     public void shouldCreateCompiledClassOfSpecificKind() {
         CompiledClass victim = new CompiledClass("my.pkg.myFileName");
 
-        assertEquals(victim.toUri().toString(), "string:///my/pkg/myFileName.class");
+        assertEquals("string:///my/pkg/myFileName.class", victim.toUri().toString());
         assertNotNull(victim.getClassByteCode());
     }
 }

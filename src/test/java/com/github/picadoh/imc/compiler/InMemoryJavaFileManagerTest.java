@@ -1,7 +1,7 @@
 package com.github.picadoh.imc.compiler;
 
 import com.github.picadoh.imc.model.CompiledClass;
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 import javax.tools.FileObject;
 import javax.tools.JavaFileManager;
@@ -9,9 +9,9 @@ import javax.tools.JavaFileObject;
 import java.io.IOException;
 import java.util.Collections;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Mockito.mock;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 
 public class InMemoryJavaFileManagerTest {
 
@@ -26,11 +26,11 @@ public class InMemoryJavaFileManagerTest {
         JavaFileObject javaFileObject = victim.getJavaFileForOutput(location, "SomeName", null, fileObject);
 
         assertNotNull(javaFileObject);
-        assertEquals(javaFileObject.getKind(), JavaFileObject.Kind.CLASS);
+        assertEquals(JavaFileObject.Kind.CLASS, javaFileObject.getKind());
 
         CompiledClass expectedCompiledClass = new CompiledClass("SomeName");
 
-        assertEquals(victim.getCompilerResult(), new CompilerResult(Collections.singletonList(expectedCompiledClass)));
+        assertEquals(new CompilerResult(Collections.singletonList(expectedCompiledClass)), victim.getCompilerResult());
     }
 
 }

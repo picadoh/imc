@@ -2,22 +2,22 @@ package com.github.picadoh.imc.compiler;
 
 import com.github.picadoh.imc.model.CompiledClass;
 import com.github.picadoh.imc.model.JavaSourceString;
-import org.testng.annotations.BeforeMethod;
-import org.testng.annotations.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
+import static org.junit.Assert.*;
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.*;
 
 public class InMemoryJavaCompilerTest {
 
     private InMemoryJavaCompiler victim;
 
-    @BeforeMethod
+    @Before
     public void setupScenario() {
         victim = new InMemoryJavaCompiler();
     }
@@ -61,7 +61,7 @@ public class InMemoryJavaCompilerTest {
 
         CompilerResult result = spiedVictim.compile(sources);
 
-        assertEquals(result.getCompiledClasses(), compiledClasses);
+        assertEquals(compiledClasses, result.getCompiledClasses());
 
         verify(spiedVictim).loadClasspath();
     }
@@ -70,7 +70,7 @@ public class InMemoryJavaCompilerTest {
     public void shouldLoadClassPath() {
         String classpath = victim.loadClasspath();
         assertNotNull(classpath);
-        assertNotEquals("", classpath);
+        assertFalse(classpath.isEmpty());
     }
 
     @Test

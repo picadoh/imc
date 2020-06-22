@@ -1,7 +1,7 @@
 package com.github.picadoh.imc.report;
 
 import com.github.picadoh.imc.model.JavaSourceString;
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 import javax.tools.Diagnostic;
 import javax.tools.JavaFileObject;
@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Locale;
 
 import static java.util.Arrays.asList;
-import static org.testng.Assert.assertEquals;
+import static org.junit.Assert.assertEquals;
 
 public class CompilationErrorReportTest {
     @Test
@@ -23,15 +23,14 @@ public class CompilationErrorReportTest {
 
         CompilationErrorReport report = new CompilationErrorReport(options, diagnostics);
 
-        assertEquals(report.getOptions(), asList("option1", "option2"));
-        assertEquals(report.getDiagnostics(), diagnostics);
+        assertEquals(asList("option1", "option2"), report.getOptions());
+        assertEquals(diagnostics, report.getDiagnostics());
 
-        assertEquals(report.toString(),
-                "options:\n" +
+        assertEquals("options:\n" +
                         "[option1, option2]\n" +
                         "errors:\n" +
                         "cls1 -> ERROR:errorCode (1:10) msg1\n" +
-                        "cls2 -> ERROR:errorCode (2:20) msg2\n");
+                        "cls2 -> ERROR:errorCode (2:20) msg2\n", report.toString());
     }
 
     private Diagnostic<JavaFileObject> buildDiagnostic(

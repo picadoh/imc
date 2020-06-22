@@ -1,15 +1,15 @@
 package com.github.picadoh.imc.compiler;
 
-import org.testng.annotations.Test;
+import org.junit.Test;
 
 import java.util.HashMap;
 import java.util.Map;
 
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertNotNull;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyString;
 import static org.mockito.Mockito.*;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertNotNull;
 
 public class ByteCodeClassLoaderTest {
 
@@ -22,10 +22,10 @@ public class ByteCodeClassLoaderTest {
         Class<?> cls = victim.findClass("something");
 
         assertNotNull(cls);
-        assertEquals(cls, String.class);
+        assertEquals(String.class, cls);
     }
 
-    @Test(expectedExceptions = ClassNotFoundException.class)
+    @Test(expected = ClassNotFoundException.class)
     public void shouldThrowExceptionWhenClassNotFound() throws Exception {
         ByteCodeClassLoader victim = spy(ByteCodeClassLoader.create(new HashMap<String, byte[]>()));
 
@@ -49,11 +49,11 @@ public class ByteCodeClassLoaderTest {
         Map<String, Class<?>> classes = victim.loadClasses();
 
         assertNotNull(classes);
-        assertEquals(classes.size(), 1);
-        assertEquals(classes.get(String.class.getName()), String.class);
+        assertEquals(1, classes.size());
+        assertEquals(String.class, classes.get(String.class.getName()));
     }
 
-    @Test(expectedExceptions = ClassNotFoundException.class)
+    @Test(expected = ClassNotFoundException.class)
     public void shouldThrowExceptionWhenFailsToLoadClass() throws ClassNotFoundException {
         ByteCodeClassLoader victim = spy(ByteCodeClassLoader.create(
                 new HashMap<String, byte[]>() {

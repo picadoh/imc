@@ -2,8 +2,8 @@ package com.github.picadoh.imc.integration;
 
 import com.github.picadoh.imc.compiler.InMemoryJavaCompiler;
 import com.github.picadoh.imc.compiler.CompilerResult;
-import org.testng.annotations.BeforeClass;
-import org.testng.annotations.Test;
+import org.junit.Before;
+import org.junit.Test;
 
 import java.io.IOException;
 import java.nio.charset.Charset;
@@ -14,8 +14,8 @@ import java.util.List;
 import java.util.Map;
 
 import static java.util.Arrays.asList;
-import static org.testng.Assert.assertEquals;
-import static org.testng.Assert.assertTrue;
+import static org.junit.Assert.assertEquals;
+import static org.junit.Assert.assertTrue;
 
 public class InMemoryJavaCompilerIntegrationTest {
 
@@ -25,7 +25,7 @@ public class InMemoryJavaCompilerIntegrationTest {
     private String sourceStringLengthSort;
     private String sourceStringSorterByLength;
 
-    @BeforeClass
+    @Before
     public void setupScenario() throws Exception {
         sourceHelloWorld = readAllText("src/test/resources/test-input/HelloWorld.java");
         sourceHelloWorldPackaged = readAllText("src/test/resources/test-input/HelloWorldPackaged.java");
@@ -41,7 +41,7 @@ public class InMemoryJavaCompilerIntegrationTest {
         Map<String, Class<?>> classes = compilerResult.loadClassMap();
 
         executeMain(classes.get("HelloWorld"), new String[]{});
-        assertEquals(classes.size(), 1);
+        assertEquals(1, classes.size());
     }
 
     @Test
@@ -51,7 +51,7 @@ public class InMemoryJavaCompilerIntegrationTest {
         Map<String, Class<?>> classes = compilerResult.loadClassMap();
 
         executeMain(classes.get("com.example.HelloWorld"), new String[]{});
-        assertEquals(classes.size(), 1);
+        assertEquals(1, classes.size());
     }
 
     @Test
@@ -75,8 +75,8 @@ public class InMemoryJavaCompilerIntegrationTest {
         List<String> inputList = asList("aaa", "b", "aa", "a");
         classes.get("StringLengthSort").getMethod("sort", List.class).invoke(instance, inputList);
 
-        assertEquals(inputList, asList("b", "a", "aa", "aaa"));
-        assertEquals(classes.size(), 2);
+        assertEquals(asList("b", "a", "aa", "aaa"), inputList);
+        assertEquals(2, classes.size());
     }
 
     @Test
@@ -101,8 +101,8 @@ public class InMemoryJavaCompilerIntegrationTest {
         List<String> inputList = asList("aaa", "b", "aa", "a");
         stringLengthSortClass.getMethod("sort", List.class).invoke(stringLengthSortInstance, inputList);
 
-        assertEquals(inputList, asList("b", "a", "aa", "aaa"));
-        assertEquals(classes.size(), 3);
+        assertEquals(asList("b", "a", "aa", "aaa"), inputList);
+        assertEquals(3, classes.size());
     }
 
     @Test
@@ -121,8 +121,8 @@ public class InMemoryJavaCompilerIntegrationTest {
         List<String> inputList = asList("aaa", "b", "aa", "a");
         instance.sort(inputList);
 
-        assertEquals(inputList, asList("b", "a", "aa", "aaa"));
-        assertEquals(classes.size(), 3);
+        assertEquals(asList("b", "a", "aa", "aaa"), inputList);
+        assertEquals(3, classes.size());
     }
 
     private void executeMain(Class<?> cls, String[] args) throws Exception {

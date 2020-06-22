@@ -1,8 +1,9 @@
 package com.github.picadoh.imc.compiler;
 
-import com.github.picadoh.imc.model.JavaSourceString;import org.mockito.Mock;
-import org.testng.annotations.BeforeTest;
-import org.testng.annotations.Test;
+import com.github.picadoh.imc.model.JavaSourceString;
+import org.junit.Before;
+import org.junit.Test;
+import org.mockito.Mock;
 
 import javax.tools.*;
 import java.io.Writer;
@@ -10,10 +11,10 @@ import java.util.ArrayList;
 import java.util.List;
 
 import static java.util.Arrays.asList;
+import static org.junit.Assert.*;
 import static org.mockito.Matchers.*;
 import static org.mockito.Mockito.*;
 import static org.mockito.MockitoAnnotations.initMocks;
-import static org.testng.Assert.*;
 
 public class CompilerToolTest {
 
@@ -25,7 +26,7 @@ public class CompilerToolTest {
     @Mock
     private Diagnostic<JavaFileObject> diag2;
 
-    @BeforeTest
+    @Before
     public void setup() {
         initMocks(this);
 
@@ -106,8 +107,8 @@ public class CompilerToolTest {
 
         assertNotNull(result);
         assertTrue(result.hasErrors());
-        assertEquals(result.getCompilationErrorReport().getOptions(), asList("-classpath", "my.jar"));
-        assertEquals(result.getCompilationErrorReport().getDiagnostics(), diagnostics);
+        assertEquals(asList("-classpath", "my.jar"), result.getCompilationErrorReport().getOptions());
+        assertEquals(diagnostics, result.getCompilationErrorReport().getDiagnostics());
     }
 
 }
