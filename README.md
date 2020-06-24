@@ -3,6 +3,8 @@ The in-memory compiler allows you to compile java source to in-memory bytecode.
 
 ### Disclaimer
 
+This is a pet project for learning purposes and it's not actively maintained.
+
 This code isn't considered stable thus background compatibility isn't guaranteed.
 
 * APIs are subject to change at any time.
